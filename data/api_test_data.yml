@@ -1,0 +1,33 @@
+test_detect_image_faces_success:
+  # project,imageuri,期望返回码,期望返回requestid,期望返回人脸信息，期望返回imageurl
+  # project, imageuri, expect_status_code, expect_requestid, expect_facemsg, expect_imageurl
+  - ["IMM-Test-Project", "oss://peter-test666/imm-test/testcases/item01.jpg", "200", True, True, "oss://peter-test666/imm-test/testcases/item01.jpg"]
+  - ["IMM-Test-Project", "oss://peter-test666/imm-test/testcases/item02.bmp", "200", True, True, "oss://peter-test666/imm-test/testcases/item02.bmp"]
+  - ["IMM-Test-Project", "oss://peter-test666/imm-test/testcases/item03.png", "200", True, True, "oss://peter-test666/imm-test/testcases/item03.png"]
+  - ["IMM-Test-Project", "oss://peter-test666/imm-test/testcases/item04.tif", "200", True, True, "oss://peter-test666/imm-test/testcases/item04.tif"]
+  - ["IMM-Test-Project", "oss://peter-test666/imm-test/testcases/item05.gif", "200", True, True, "oss://peter-test666/imm-test/testcases/item05.gif"]
+
+test_detect_image_faces_fail:
+  # project,imageuri,期望返回码,期望返回requestid,期望hostid，期望code,期望返回错误信息, 期望返回recommend
+  # project, imageuri, expect_status_code, expect_requestid, expect_hostid, expect_code, expect_message, expect_recommend
+  ##########project不存在##########
+  - ["non-exist-project", "oss://peter-test666/imm-test/testcases/item01.jpg", "404", True, "imm.cn-shanghai.aliyuncs.com",
+     "InvalidProject.NotFound", "The resource Project cannot be found. Please check.", "https://error-center.aliyun.com/status/search?Keyword=InvalidProject.NotFound&source=PopGw"]
+  ##########ImageUri路径不是图片##########
+  - ["IMM-Test-Project", "oss://peter-test666/imm-test/testcases/", "400", True, "imm.cn-shanghai.aliyuncs.com",
+     "InvalidImageUri.Unsupported", "The resource ImageUri is not supported. This image file may be corrupted.","https://error-center.aliyun.com/status/search?Keyword=InvalidImageUri.Unsupported&source=PopGw"]
+  ##########当前project不存在的obs##########
+  - ["IMM-Test-Project", "oss://peter-test111/imm-test/testcases/item01.jpg", "400", True, "imm.cn-shanghai.aliyuncs.com",
+     "InvalidOSSUri.NotFound", "The resource OSSUri cannot be found. The specified bucket does not exist.","https://error-center.aliyun.com/status/search?Keyword=InvalidOSSUri.NotFound&source=PopGw"]
+  ##########ImageUri路径格式异常##########
+  - ["IMM-Test-Project", "test://peter-test666/imm-test/testcases/item01.jpg", "400", True, "imm.cn-shanghai.aliyuncs.com",
+     "InvalidParameter.ImageUri.WrongFormat", "The input parameter ImageUri has invalid format. Should be oss://bucket-name/path/to/file","https://error-center.aliyun.com/status/search?Keyword=InvalidParameter.ImageUri.WrongFormat&source=PopGw"]
+  ##########ImageUri路径图片不存在##########
+  - ["IMM-Test-Project", "oss://peter-test666/imm-test/testcases/notexistpic.jpg", "400", True, "imm.cn-shanghai.aliyuncs.com",
+     "InvalidImageUri.NotFound", "The resource ImageUri cannot be found. Please check.", "https://error-center.aliyun.com/status/search?Keyword=InvalidImageUri.NotFound&source=PopGw"]
+  ##########ImageUri不是图片格式##########
+  - ["IMM-Test-Project", "oss://peter-test666/imm-test/testcases/test.txt", "400", True, "imm.cn-shanghai.aliyuncs.com",
+     "InvalidImageUri.Unsupported", "The resource ImageUri is not supported. This image file may be corrupted.","https://error-center.aliyun.com/status/search?Keyword=InvalidImageUri.Unsupported&source=PopGw"]
+  ##########图片损坏分析失败##########
+  - ["IMM-Test-Project", "oss://peter-test666/imm-test/testcases/aaa.jpg", "400", True, "imm.cn-shanghai.aliyuncs.com",
+     "InvalidImageUri.Unsupported", "The resource ImageUri is not supported. This image file may be corrupted.","https://error-center.aliyun.com/status/search?Keyword=InvalidImageUri.Unsupported&source=PopGw"]
